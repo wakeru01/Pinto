@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Sign Up</h1>
+    {% if success %}{% endif %}
+    <form action="{% url 'signup' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control ml-3" id="username" name="username" value="{{username}}">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control ml-3" id="password" name="password" value="{{password}}">
+        </div>
+        <div class="form-group">
+            <label for="password2">Confirm Password</label>
+            <input type="password" class="form-control ml-3" id="password2" name="password2" value="{{password2}}">
+        </div>
+        <div class="form-group">
+            <label for="">Firstname</label>
+            <input type="text" class="form-control ml-3" id="first_name" name="first_name" value="{{first_name}}">
+        </div>
+        <div class="form-group">
+            <label for="">Lastname</label>
+            <input type="text" class="form-control ml-3" id="last_name" name="last_name" value="{{last_name}}">
+        </div>
+        
+        <div class="form-group">
+            <label for="email">E-mail: </label>
+            <input type="email" class="form-control ml-3" id="email" name="email" value="{{email}}">
+        </div>
+        <button type="submit" class="btn btn-primary ml-3">Sign Up</button>
+    </form>
+</div>
+
+{% endblock content %}

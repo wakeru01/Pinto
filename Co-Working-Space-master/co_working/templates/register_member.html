@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="{% url 'member_registeration' %}" method="post">
+    {% csrf_token %}
+    {% if msg %}<p class="text-success">{{msg}}</p>{% endif %}
+    <div class="form-group">
+        <label for="">Firstname:</label>
+        <input type="text" class="form-control ml-3" id="member_first_name" name="member_first_name" value="{{member_first_name}}">
+    </div>
+    <div class="form-group">
+        <label for="">Lastname:</label>
+        <input type="text" class="form-control ml-3" id="member_last_name" name="member_last_name" value="{{member_last_name}}">
+    </div>
+    <button type="submit" class="btn btn-primary ml-3">Register</button>
+</form>
+{% endblock content %}

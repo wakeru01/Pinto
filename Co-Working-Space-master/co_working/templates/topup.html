@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <form class="form-inline" method="GET" action="{% url 'topup' %}">
+        {% csrf_token %}
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="form-group">
+                    <label for="search">Member:</label>
+                    <input type="text" class="form-control ml-3" id="search" name="search"
+                        placeholder="Enter Name" value="{{search}}">
+                </div>
+            </li>
+            {% for member in member_search %}
+            <li class="list-group-item">
+                <div class="form-group">
+                    <label for="">Balance:</label>
+                    <input type="text" class="form-control ml-3" id="balance" name="balance" value="{{member.money}}"
+                        disabled>
+                </div>
+            </li>
+            {% endfor %}
+            <li class="list-group-item">
+                <button type="submit" class="btn btn-primary ml-3">Search</button>
+            </li>
+            <li class="list-group-item">
+                <button type="button" class="btn btn-primary ml-3" id="1" value="20" onclick="add(20)">+฿20</button>
+                <button type="button" class="btn btn-primary ml-3" id="2" value="50" onclick="add(50)">+฿50</button>
+                <button type="button" class="btn btn-primary ml-3" id="3" value="100" onclick="add(100)">+฿100</button>
+                <button type="button" class="btn btn-primary ml-3" id="4" value="500" onclick="add(500)">+฿500</button>
+                <button type="button" class="btn btn-primary ml-3" id="5" value="1000"
+                    onclick="add(1000)">+฿1000</button>
+            </li>
+
+    </form>
+</div>
+<script>
+    function add(money) {
+        document.getElementById('balance').value = parseInt(document.getElementById('balance').value) + money
+    }
+</script>
+{% endblock content %}
