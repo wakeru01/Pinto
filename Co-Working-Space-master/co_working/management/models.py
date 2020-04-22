@@ -9,7 +9,6 @@ class User(models.Model):
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField(max_length=100)
-    phone_number = models.PhoneNumberField("null=False, blank=False, unique=True")
 
 class Member(models.Model):
     first_name = models.CharField(max_length = 30)
@@ -37,5 +36,5 @@ class TopupLog(models.Model):
     topup_date = models.DateTimeField(auto_now=True)
     topup_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
-class Menu(models.Model):
+# class Menu(models.Model):
     
