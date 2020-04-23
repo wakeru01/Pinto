@@ -40,7 +40,7 @@ class TopupLog(models.Model):
 class Shop(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.TextField()
-    status = ((open, 'open'),(close, 'close'))
+    # status = ((open, 'open'),(close, 'close'))
     location = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
@@ -57,10 +57,23 @@ class Menu(models.Model):
     menu_pic = models.CharField(max_length=255)
     shop_shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
 
+class Wallet(models.Model):
+    # amount = models.FloatField(max_length=8)
+    history = models.CharField(max_length=255)
+    user_id  = models.ForeignKey(User, on_delete=models.CASCADE)
+
 class Image(models.Model):
     url = models.CharField(max_length=255)
     date = models.DateField(auto_now=True)
     menu_menu_id = models.ForeignKey(Menu, on_delete=models.CASCADE)
+
+class Order(models.Model):
+    # order_type = ((in_shop, 'in shop'),(backhome, 'back home'))
+    date_time = models.DateTimeField(auto_now=True)
+    # status = ((not_arrival, 'not arrival'),(arrived, 'arrived'))
+    date_time_arrival = models.DateTimeField(auto_now=True)
+    wallet_wallet_id = models.ForeignKey(Wallet, on_delete=models.CASCADE)
+    admin_user_id = models.ForeignKey(Admin, on_delete=models.CASCADE)
 
 class Order_List(models.Model):
     # list_no = models.IntegerField(null=True) AI
@@ -76,28 +89,16 @@ class Customer_Shop(models.Model):
     shop_shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
     customer_user_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
-class Order(models.Model):
-    order_type = ((in_shop, 'in shop'),(backhome, 'back home'))
-    date_time = models.DateTimeField(auto_now=True)
-    status = ((not_arrival, 'not arrival'),(arrived, 'arrived'))
-    date_time_arrival = models.DateTimeField(auto_now=True)
-    wallet_wallet_id = models.ForeignKey(Wallet, on_delete=models.CASCADE)
-    admin_user_id = models.ForeignKey(Admin, on_delete=models.CASCADE)
-
-class Wallet(models.Model):
-    # amount = models.FloatField(max_length=8)
-    history = models.CharField(max_length=255)
-    user_id  = models.ForeignKey(User, on_delete=models.CASCADE)
-    
-class wallet_wallet(models.Model):
-    wallet_wallet_id = = models.ForeignKey(Wallet, on_delete=models.CASCADE)
-    transfer_id = models.ForeignKey(Transferring, on_delete=models.CASCADE)
-
 class Transfering(models.Model):
-    # amount = models.FloatField(max_length=8)
+    amount = models.FloatField(max_length=8)
+    # ไม่แน่ใจ
+
+class wallet_wallet(models.Model):
+    wallet_wallet_id = models.ForeignKey(Wallet, on_delete=models.CASCADE)
+    transfer_id = models.ForeignKey(Transfering, on_delete=models.CASCADE)
 
 class Table(models.Model):
     # amount = models.FloatField(max_length=10)
-    status = ((using, 'using'),(free, 'free'))
+    # status = ((using, 'using'),(free, 'free'))
     shop_shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
     order_order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
