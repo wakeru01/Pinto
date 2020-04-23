@@ -68,7 +68,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg fixed-top  navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{% url 'index' %}">
             <img src="{% static 'pic/3.svg' %}" width="30" height="30" alt="">Pinto
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -87,7 +87,7 @@
                         <a class="nav-link" href="{% url 'login' %}">Log In</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'member_registeration' %}">Register</a>
+                        <a class="nav-link" href="{% url 'signup' %}">Register</a>
                     </li>
                     {% comment %} <li class="nav-item">
                         <a class="nav-link" href="{% url 'topup' %}">Topup</a>
@@ -102,6 +102,9 @@
             </ul>
         </div>
     </nav>
+    <br>
+    <br>
+    <br>
     <br>
     <div class="container">
         {% block content %}
@@ -121,13 +124,13 @@
     </div>
     
     <footer class="footer">
-        <div class="container">
+        <div class="panel-footer text-right">
             <span class="text-muted">
-                {% block footer %}
-                {% endblock %}
+                © 2020 Pinto All Rights Reserved
             </span>
         </div>
     </footer>
+    
 </body>
 
 </html>
