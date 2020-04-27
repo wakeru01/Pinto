@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 import datetime
 
-from management.models import Member, Zone, SeatBooking
+from management.models import User, Shop, Order, Order_List, Wallet, Transaction, Comment, Menu
 # Create your views here.
 
 
@@ -58,7 +58,7 @@ def sign_up(request):
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         if password == password2:
-            user = User.objects.create_user(
+            user = User.objects.create(
                 username=username,
                 password=password,
                 first_name=first_name,
@@ -80,13 +80,8 @@ def sign_up(request):
 
 # @login_required
 def index(request):
-    members = Member.objects.all()
-    zones = Zone.objects.all()
-    booking = SeatBooking.objects.all()
     context = {
-        'booking': booking,
-        'members': members,
-        'zones': zones
+
     }
     return render(request, template_name='index.html', context=context)
 

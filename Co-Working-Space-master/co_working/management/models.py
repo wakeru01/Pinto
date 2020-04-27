@@ -1,104 +1,128 @@
-from django.db import models
+from email.policy import default
+
 from django.conf import settings
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+
 # Create your models here.
 
 
-class User(models.Model):
+class User(AbstractUser):
+    '''
     username = models.CharField(max_length=16)
-    password = models.CharField(max_length=16)
+    password = models.CharField(max_length=128)
+    last_login = models.DateField()
+    is_superuser = models.BooleanField()
+    is_staff = models.BooleanField()
+    is_active = models.BooleanField()
+    date_joined =  models.DateField()
+    email = models.EmailField(('email address'), unique=True)
     first_name = models.CharField(max_length = 30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField(max_length=100)
-    phone_number = models.CharField(max_length=10, default='0')
-
-class Member(models.Model):
-    first_name = models.CharField(max_length = 30)
-    last_name = models.CharField(max_length=30)
-    money = models.IntegerField()
-
-class Zone(models.Model):
-    title = models.CharField(max_length=20)
-    description = models.TextField()
-    price = models.IntegerField()
-    available_seat = models.IntegerField()
-
-class SeatBooking(models.Model):
-    member = models.ForeignKey(Member, null=True, on_delete=models.CASCADE)
-    zone = models.ForeignKey(Zone, on_delete=models.CASCADE)
-    time_check_in = models.DateTimeField(auto_now=True)
-    time_check_out = models.DateTimeField(auto_now_add=False, blank=True, null=True)
-    total_price = models.IntegerField(null=True)
-    create_date = models.DateField(auto_now=True)
-    create_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-class TopupLog(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    amount = models.IntegerField(default=0)
-    topup_date = models.DateTimeField(auto_now=True)
-    topup_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    '''
+    phone_number = models.CharField(max_length=10, default='')
+    ADMIN = 'admin'
+    CUSTOMER = 'customer'
+    SHOP = 'shop'
+    TYPE_CHOICES = (
+        (ADMIN, 'admin'),
+        (CUSTOMER, 'customer'),
+        (SHOP, 'shop')
+    )
+    user_type = models.CharField(
+        max_length=8,
+        choices=TYPE_CHOICES,
+        default=CUSTOMER,
+    )
+    
 
 class Shop(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, default='')
     review = models.TextField()
-    # status = ((open, 'open'),(close, 'close'))
+    OPEN = 'open'
+    CLOSE = 'close'
+    STATUS_CHOICES = (
+        (OPEN, 'open'),
+        (CLOSE, 'close'),
+    )
+    status = models.CharField(
+        max_length=5,
+        choices=STATUS_CHOICES,
+        default=OPEN,
+    )
     location = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
-
-class Customer(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-
-class Admin(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    total_table = models.IntegerField(default='0')
 
 class Menu(models.Model):
     menu_name = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
-    menu_pic = models.CharField(max_length=255)
-    shop_shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    menu_price = models.DecimalField(max_digits=8, decimal_places=3, default='0')
+    image_url = models.CharField(max_length=255)
 
 class Wallet(models.Model):
-    # amount = models.FloatField(max_length=8)
-    history = models.CharField(max_length=255)
-    user_id  = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=8, decimal_places=3, default='0')
+    user_id  = models.ForeignKey(User, on_delete=models.CASCADE, default='')
 
-class Image(models.Model):
-    url = models.CharField(max_length=255)
-    date = models.DateField(auto_now=True)
-    menu_menu_id = models.ForeignKey(Menu, on_delete=models.CASCADE)
+class Transaction(models.Model):
+    created_at = models.DateTimeField(auto_now=True)
+    amount = models.DecimalField(max_digits=8, decimal_places=3, default='0')
+    wallet_id_from = models.ForeignKey(Wallet, on_delete=models.CASCADE)
+    wallet_id_from =models.ForeignKey(Wallet, on_delete=models.CASCADE)
 
-class Order(models.Model):
-    # order_type = ((in_shop, 'in shop'),(backhome, 'back home'))
+class Order(models.Model):   
+    '''OPEN = 'open'
+    CLOSE = 'close'
+    STATUS_CHOICES = (
+        (OPEN, 'open'),
+        (CLOSE, 'close'),
+    )
+    status = models.CharField(
+        max_length=5,
+        choices=STATUS_CHOICES,
+        default=OPEN,
+    )'''
+    IN_SHOP = 'in shop'
+    BACKHOME = 'back home'
+    ORDER_TYPE_CHOICES = (
+        (IN_SHOP, 'in shop'),
+        (BACKHOME, 'back home')
+    )
+    order_type = models.CharField(max_length=12,
+        choices=ORDER_TYPE_CHOICES,
+        default=IN_SHOP
+    )
+    ARRIVED = 'arrived'
+    NOT_ARRIVAL = 'not_arrival'
+    FINISHED = 'finished'
+    STATUS_CHOICES = (
+        (NOT_ARRIVAL, 'not arrival'), 
+        (ARRIVED, 'arrived'),
+        (FINISHED, 'finished')
+    )
+    status_type = models.CharField(max_length=12,
+        choices=STATUS_CHOICES,
+        default=ARRIVED
+    )
     date_time = models.DateTimeField(auto_now=True)
-    # status = ((not_arrival, 'not arrival'),(arrived, 'arrived'))
+    reserved_table = models.IntegerField(default="0")
     date_time_arrival = models.DateTimeField(auto_now=True)
     wallet_wallet_id = models.ForeignKey(Wallet, on_delete=models.CASCADE)
-    admin_user_id = models.ForeignKey(Admin, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, default='')
 
 class Order_List(models.Model):
-    # list_no = models.IntegerField(null=True) AI
     unit = models.IntegerField(null=True)
-    # price = models.FloatField(max_length=8)
-    order_order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
-    menu_menu_id = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=8, decimal_places=3, default='0')
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
+    menu_id = models.ForeignKey(Menu, on_delete=models.CASCADE)
 
-class Customer_Shop(models.Model):
-    date = models.DateField(auto_now=True)
-    score = models.IntegerField(null=True)
-    commend = models.TextField(max_length=255)
-    shop_shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    customer_user_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
-
-class Transfering(models.Model):
-    amount = models.FloatField(max_length=8)
-    # ไม่แน่ใจ
-
-class wallet_wallet(models.Model):
-    wallet_wallet_id = models.ForeignKey(Wallet, on_delete=models.CASCADE)
-    transfer_id = models.ForeignKey(Transfering, on_delete=models.CASCADE)
-
-class Table(models.Model):
-    # amount = models.FloatField(max_length=10)
-    # status = ((using, 'using'),(free, 'free'))
-    shop_shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    order_order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
+class Comment(models.Model):
+    comment = models.TextField(max_length=255)
+    score = models.IntegerField()
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)

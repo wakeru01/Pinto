@@ -19,9 +19,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('member-registeration/', views.member_regis, name='member_registeration'),
-    path('topup/', views.topup, name='topup'),
-    path('check-in/', views.check_in, name='check_in'),
-    path('check-out/', views.check_out, name='check_out'),
-    path('search-member/', views.search_member, name='search_member'),
+    path('member-registeration/', views.sign_up, name='member_registeration')
 ]
