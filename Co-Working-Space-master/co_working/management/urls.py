@@ -19,5 +19,10 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('member-registeration/', views.sign_up, name='member_registeration')
+    path('member-registeration/', views.sign_up, name='member_registeration'),
+    path('shop/', views.shop, name='shop'),
+    path('add_menu/', views.add_menu, name='add_menu'),
+    path('menu/', views.menu, name='menu'),
+    path('menu/<int:menu_id>/', views.edit_menu, name='edit_menu'),
+
 ]
